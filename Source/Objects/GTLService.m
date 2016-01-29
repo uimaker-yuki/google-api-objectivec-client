@@ -27,6 +27,7 @@
 #endif
 
 #import "GTLService.h"
+#import "GTLServiceDrive.h" // for checking
 
 NSString* const kGTLServiceErrorDomain = @"com.google.GTLServiceDomain";
 NSString* const kGTLJSONRPCErrorDomain = @"com.google.GTLJSONRPCErrorDomain";
@@ -1240,6 +1241,10 @@ totalBytesExpectedToSend:(NSInteger)totalBytesExpected {
           json = jsonWrapper;
         } else {
           json = [jsonWrapper valueForKey:@"result"];
+//            NSString* lookme = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if(nil == json && [ticket.service isKindOfClass:[GTLServiceDrive class]] && [((GTLQuery*)ticket.executingQuery).methodName isEqualToString:@"drive.files.list"]){
+                json = [@{@"files":@[]} mutableCopy];
+            }
         }
       }
 
